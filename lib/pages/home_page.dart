@@ -1,6 +1,7 @@
 import 'package:fitness_tracker_app/data/workout_data.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'workout_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,6 +32,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // go to workout page
+  void goToWorkoutPage(String workoutName) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WorkoutPage(workoutName: workoutName),
+      ),
+    );
+  }
+
   // save workout
   void save() {
     // get workout name from text controller
@@ -55,7 +66,6 @@ class _HomePageState extends State<HomePage> {
     newWorkoutController.clear();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
@@ -71,8 +81,16 @@ class _HomePageState extends State<HomePage> {
             body: ListView.builder(
               itemCount: value.getWorkoutList().length,
               itemBuilder:
-                  (context, index) =>
-                      ListTile(title: Text(value.getWorkoutList()[index].name)),
+                  (context, index) => ListTile(
+                    title: Text(value.getWorkoutList()[index].name),
+                    trailing: IconButton(
+                      icon: Icon(Icons.arrow_forward_ios),
+                      onPressed:
+                          () => goToWorkoutPage(
+                            value.getWorkoutList()[index].name,
+                          ),
+                    ),
+                  ),
             ),
           ),
     );
