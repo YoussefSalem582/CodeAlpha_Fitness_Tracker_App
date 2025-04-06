@@ -31,20 +31,72 @@ class _WorkoutPageState extends State<WorkoutPage> {
   void createNewExercise() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-          title: Text("Add a new exercise"),
-        content: Column(
-          // exercise name
+      builder:
+          (context) => AlertDialog(
+            title: Text("Add a new exercise"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // exercise name
+                TextField(controller: exerciseNameController),
 
-          // weight
+                // weight
+                TextField(controller: weightController),
 
-          // reps
+                // reps
+                TextField(controller: repsController),
 
-          // sets
-
-        ),
-      ),
+                // sets
+                TextField(controller: setsController),
+              ],
+            ),
+            actions: [
+              // save button
+              MaterialButton(onPressed: save, child: Text("save")),
+              // cancel button
+              MaterialButton(onPressed: cancel, child: Text("cancel")),
+            ],
+          ),
     );
+  }
+
+  // save workout
+  void save() {
+    // get exercise name from text controller
+    String newExerciseName = exerciseNameController.text;
+    String weight = weightController.text;
+    String reps = repsController.text;
+    String sets = setsController.text;
+    // add exercise to workout
+    Provider.of<WorkoutData>(
+      context,
+      listen: false,
+    ).addExercise(
+        widget.workoutName,
+        newExerciseName,
+        weight,
+        reps,
+        sets
+    );
+
+    // pop dialog box
+    Navigator.pop(context);
+    clear();
+  }
+
+  // cancel workout
+  void cancel() {
+    // pop dialog box
+    Navigator.pop(context);
+    clear();
+  }
+
+  // clear controllers
+  void clear() {
+    weightController.clear();
+    exerciseNameController.clear();
+    repsController.clear();
+    setsController.clear();
   }
 
   @override
@@ -54,7 +106,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           (context, value, child) => Scaffold(
             appBar: AppBar(title: Text(widget.workoutName)),
             floatingActionButton: FloatingActionButton(
-              onPressed: () => createNewExercise,
+              onPressed: createNewExercise,
               child: Icon(Icons.add),
             ),
             body: ListView.builder(
